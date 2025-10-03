@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidatos Sistema Solar</title>
+   <style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #ffffff;
+        color: #333333;
+        padding: 20px;
+        margin: 0;
+    }
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        background-color: #f5f5f5;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        border: 1px solid #e0e0e0;
+    }
+    h1 {
+        text-align: center;
+        color: #4a4a4a;
+        text-shadow: none;
+        margin-bottom: 10px;
+    }
+    .criteria {
+        background-color: #ebebeb;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 25px;
+        border-left: 4px solid #757575;
+    }
+    .criteria h3 {
+        color: #5a5a5a;
+        margin-top: 0;
+    }
+    .criteria-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 10px;
+        font-size: 0.9em;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        background-color: #ffffff;
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid #e0e0e0;
+    }
+    thead {
+        background-color: #616161;
+    }
+    th {
+        padding: 15px 10px;
+        text-align: left;
+        font-weight: 600;
+        color: #ffffff;
+        font-size: 0.85em;
+        border-bottom: 2px solid #9e9e9e;
+    }
+    td {
+        padding: 12px 10px;
+        border-bottom: 1px solid #e0e0e0;
+        font-size: 0.85em;
+        color: #424242;
+    }
+    tr:hover {
+        background-color: #f0f0f0;
+    }
+    .score {
+        font-weight: bold;
+        font-size: 1.1em;
+        padding: 5px 10px;
+        border-radius: 5px;
+        text-align: center;
+        color: #333333;
+    }
+    .score-high {
+        background-color: #d4edda;
+        color: #155724;
+    }
+    .score-medium {
+        background-color: #fff3cd;
+        color: #664d03;
+    }
+    .score-low {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+    .location-name {
+        font-weight: 600;
+        color: #5a5a5a;
+    }
+    .type-badge {
+        display: inline-block;
+        padding: 3px 8px;
+        border-radius: 12px;
+        font-size: 0.75em;
+        font-weight: 600;
+        color: #333333;
+    }
+    .type-planet {
+        background-color: #e0e0e0;
+    }
+    .type-moon {
+        background-color: #bdbdbd;
+    }
+    .check { color: #28a745; }
+    .cross { color: #dc3545; }
+    .partial { color: #ffc107; }
+
+    /* Estilos para el botón de la modal */
+    #showBibleBtn {
+        background: linear-gradient(135deg, #616161 0%, #424242 100%); /* Tonos de gris para un look más elegante */
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        transition: all 0.3s ease;
+    }
+    #showBibleBtn:hover {
+        background: linear-gradient(135deg, #424242 0%, #212121 100%);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    }
+
+    /* Estilos para la Modal */
+    #bibleModal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.6); /* Fondo semi-transparente oscuro */
+        z-index: 1000;
+        overflow: auto;
+        backdrop-filter: blur(5px); /* Efecto de desenfoque moderno */
+    }
+    #bibleModal > div { /* Contenido de la modal */
+        position: relative;
+        max-width: 800px;
+        margin: 50px auto;
+        background-color: #ffffff; /* Fondo blanco para la modal */
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        border: 1px solid #e0e0e0;
+        color: #333333; /* Texto principal oscuro */
+    }
+    #closeModal {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background-color: #e0e0e0; /* Gris claro para el botón de cerrar */
+        border: none;
+        color: #333333; /* Texto oscuro */
+        font-size: 24px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    #closeModal:hover {
+        background-color: #bdbdbd; /* Gris más oscuro al pasar el ratón */
+        transform: rotate(90deg);
+    }
+    #bibleModal h2 {
+        color: #4a4a4a; /* Gris oscuro para el título de la modal */
+        margin-top: 0;
+        text-align: center;
+        font-size: 1.8em;
+        margin-bottom: 20px;
+    }
+    #bibleModal div > p, #bibleModal div > p strong {
+        color: #424242; /* Gris oscuro para el texto de la Biblia */
+        line-height: 1.8;
+    }
+    #bibleModal div { /* Contenedor del texto de la Biblia */
+        max-height: 500px;
+        overflow-y: auto;
+        padding: 20px;
+        background-color: #f0f0f0; /* Gris muy claro para el fondo del texto */
+        border-radius: 10px;
+        border: 1px solid #e0e0e0;
+    }
+    #bibleModal p:last-child { /* Nota final */
+        text-align: center;
+        color: #757575; /* Gris medio para la nota */
+        font-size: 0.9em;
+        margin-top: 20px;
+    }
+    /* Estilos para las secciones de sistema de Júpiter, Saturno, etc. */
+    tr.system-header td {
+        font-weight: bold;
+        color: #4a4a4a !important; /* Asegura que el color sea oscuro */
+        padding-top: 20px;
+        background-color: #f0f0f0; /* Fondo gris claro para estos encabezados */
+        border-bottom: none; /* Sin borde inferior para una apariencia más limpia */
+    }
+    /* Mejora de las cajas de información al final */
+    .info-box-success {
+        margin-top: 30px;
+        padding: 20px;
+        background-color: #d4edda; /* Verde muy claro */
+        border-radius: 10px;
+        border-left: 4px solid #28a745; /* Verde para el borde */
+        color: #155724; /* Verde oscuro para el texto */
+    }
+    .info-box-success h3 {
+        color: #28a745; /* Verde para el título */
+        margin-top: 0;
+    }
+    .info-box-info {
+        margin-top: 20px;
+        padding: 15px;
+        background-color: #e0f7fa; /* Azul claro */
+        border-radius: 10px;
+        border-left: 4px solid #00acc1; /* Azul para el borde */
+        color: #006064; /* Azul oscuro para el texto */
+    }
+    .info-box-info h4 {
+        color: #00acc1; /* Azul para el título */
+        margin-top: 0;
+    }
+    .info-box-success ol, .info-box-info ul {
+        line-height: 1.8;
+        padding-left: 25px; /* Indentación para las listas */
+        margin-bottom: 0;
+    }
+
+</style>
+</head>
+<body>
+    <div class="container">
+        <h1>Análisis de Ubicaciones Potenciales en el Sistema Solar</h1>
+        <p style="text-align: center; color: #757575; margin-bottom: 25px;">
+            Basado en el análisis del libro de Ezequiel - Búsqueda de ubicaciones viables
+        </p>
+
+        <div class="criteria">
+            <h3>📊 Criterios de Evaluación</h3>
+            <div class="criteria-list">
+                <div>🌡️ Temperatura: -60°C a 100°C = <strong>0.6</strong></div>
+                <div>🌋 Volcanes activos = <strong>0.1</strong></div>
+                <div>💨 Vientos 0-300 km/h = <strong>0.3</strong></div>
+                <div>🪐 Zona habitable (±3x) = Multiplicador</div>
+                <div>🪨 Geología sedimentaria/ígnea = Bonus</div>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Ubicación</th>
+                    <th>Tipo</th>
+                    <th>Temp (°C)</th>
+                    <th>Volcanes</th>
+                    <th>Vientos</th>
+                    <th>Geología</th>
+                    <th>Zona Hab.</th>
+                    <th>Puntuación</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- PLANETAS -->
+                <tr>
+                    <td class="location-name">Marte</td>
+                    <td><span class="type-badge type-planet">Planeta</span></td>
+                    <td>-63 a 20</td>
+                    <td class="check">✓ (0.1)</td>
+                    <td class="check">✓ (0.3)</td>
+                    <td class="check">Sedimentario/Ígneo</td>
+                    <td class="check">Sí (×1.5)</td>
+                    <td><span class="score score-high">1.5</span></td>
+                </tr>
+                <tr>
+                    <td class="location-name">Venus (alta atmósfera)</td>
+                    <td><span class="type-badge type-planet">Planeta</span></td>
+                    <td>0 a 50</td>
+                    <td class="check">✓ (0.1)</td>
+                    <td class="cross">✗ (450 km/h)</td>
+                    <td class="partial">Ígneo</td>
+                    <td class="check">Límite (×1.2)</td>
+                    <td><span class="score score-medium">0.84</span></td>
+                </tr>
+                <tr>
+                    <td class="location-name">Tierra (referencia)</td>
+                    <td><span class="type-badge type-planet">Planeta</span></td>
+                    <td>-89 a 56</td>
+                    <td class="check">✓ (0.1)</td>
+                    <td class="check">✓ (0.3)</td>
+                    <td class="check">Todos los tipos</td>
+                    <td class="check">Centro (×2.0)</td>
+                    <td><span class="score score-high">2.0</span></td>
+                </tr>
+
+                <!-- LUNAS DE JÚPITER -->
+                <tr class="system-header">
+                    <td colspan="8">
+                        🪐 Sistema de Júpiter
+                    </td>
+                </tr>
+                <tr>
+                    <td class="location-name">Ío</td>
+                    <td><span class="type-badge type-moon">Luna</span></td>
+                    <td>-163 a -143</td>
+                    <td class="check">✓✓✓ (0.1)</td>
+                    <td class="check">✓ (0.3)</td>
+                    <td class="check">Ígneo volcánico</td>
+                    <td class="cross">No (×0.5)</td>
+                    <td><span class="score score-low">0.25</span></td>
+                </tr>
+                <tr>
+                    <td class="location-name">Europa (subterráneo)</td>
+                    <td><span class="type-badge type-moon">Luna</span></td>
+                    <td>-160 (sup), 0 (océano)</td>
+                    <td class="check">✓ Posibles (0.1)</td>
+                    <td class="check">✓ (0.3)</td>
+                    <td class="check">Hielo/Roca</td>
+                    <td class="partial">Límite (×1.0)</td>
+                    <td><span class="score score-high">1.0</span></td>
+                </tr>
+                <tr>
+                    <td class="location-name">Ganímedes (subterráneo)</td>
+                    <td><span class="type-badge type-moon">Luna</span></td>
+                    <td>-160 (sup), -5 (océano)</td>
+                    <td class="partial">? (0.05)</td>
+                    <td class="check">✓ (0.3)</td>
+                    <td class="check">Hielo/Roca</td>
+                    <td class="partial">Límite (×1.0)</td>
+                    <td><span class="score score-medium">0.85</span></td>
+                </tr>
+                <tr>
+                    <td class="location-name">Calisto</td>
+                    <td><span class="type-badge type-moon">Luna</span></td>
+                    <td>-193 a -108</td>
+                    <td class="cross">✗</td>
+                    <td class="check">✓ (0.3)</td>
+                    <td class="partial">Hielo antiguo</td>
+                    <td class="cross">No (×0.5)</td>
+                    <td><span class="score score-low">0.15</span></td>
+                </tr>
+
+                <!-- LUNAS DE SATURNO -->
+                <tr class="system-header">
+                    <td colspan="8">
+                        🪐 Sistema de Saturno
+                    </td>
+                </tr>
+                <tr>
+                    <td class="location-name">Encélado (subterráneo)</td>
+                    <td><span class="type-badge type-moon">Luna</span></td>
+                    <td>-198 (sup), -5 (océano)</td>
+                    <td class="check">✓ Géiseres (0.1)</td>
+                    <td class="check">✓ (0.3)</td>
+                    <td class="check">Hielo/Roca</td>
+                    <td class="check">Posible (×1.3)</td>
+                    <td><span class="score score-high">1.3</span></td>
+                </tr>
+                <tr>
+                    <td class="location-name">Titán (superficie)</td>
+                    <td><span class="type-badge type-moon">Luna</span></td>
+                    <td>-179 a -180</td>
+                    <td class="check">✓ Criovulcanismo (0.1)</td>
+                    <td class="check">✓ (0.3)</td>
+                    <td class="check">Orgánico/Hielo</td>
+                    <td class="check">Químico (×1.4)</td>
+                    <td><span class="score score-high">1.4</span></td>
+                </tr>
+                <tr>
+                    <td class="location-name">Titán (subsuperficie)</td>
+                    <td><span class="type-badge type-moon">Luna</span></td>
+                    <td>-179 (sup), 0 (océano)</td>
+                    <td class="check">✓ (0.1)</td>
+                    <td class="check">✓ (0.3)</td>
+                    <td class="check">Complejo</td>
+                    <td class="check">Sí (×1.5)</td>
+                    <td><span class="score score-high">1.5</span></td>
+                </tr>
+
+                <!-- ASTEROIDES -->
+                <tr class="system-header">
+                    <td colspan="8">
+                        ☄️ Cinturón de Asteroides
+                    </td>
+                </tr>
+                <tr>
+                    <td class="location-name">Ceres</td>
+                    <td><span class="type-badge type-moon">Planeta Enano</span></td>
+                    <td>-105 a -38</td>
+                    <td class="check">✓ Criovulcanismo (0.1)</td>
+                    <td class="check">✓ (0.3)</td>
+                    <td class="check">Hielo/Roca</td>
+                    <td class="partial">Límite (×1.1)</td>
+                    <td><span class="score score-high">1.1</span></td>
+                </tr>
+                <tr>
+                    <td class="location-name">Vesta</td>
+                    <td><span class="type-badge type-moon">Asteroide</span></td>
+                    <td>-188 a -20</td>
+                    <td class="cross">✗ (extinto)</td>
+                    <td class="check">✓ (0.3)</td>
+                    <td class="check">Ígneo diferenciado</td>
+                    <td class="cross">No (×0.1)</td>
+                    <td><span class="score score-low">0.03</span></td>
+                </tr>
+                <tr>
+                    <td class="location-name">Pallas</td>
+                    <td><span class="type-badge type-moon">Asteroide</span></td>
+                    <td>-190 a -40</td>
+                    <td class="cross">✗</td>
+                    <td class="check">✓ (0.3)</td>
+                    <td class="partial">Primitivo</td>
+                    <td class="cross">No (×0.1)</td>
+                    <td><span class="score score-low">0.03</span></td>
+                </tr>
+
+                <!-- OTROS -->
+                <tr class="system-header">
+                    <td colspan="8">
+                        🌌 Sistema Exterior
+                    </td>
+                </tr>
+                <tr>
+                    <td class="location-name">Tritón (subsuperficie)</td>
+                    <td><span class="type-badge type-moon">Luna</span></td>
+                    <td>-235 (sup), -10 (posible)</td>
+                    <td class="check">✓ Géiseres (0.1)</td>
+                    <td class="check">✓ (0.3)</td>
+                    <td class="check">Hielo/Roca</td>
+                    <td class="partial">Límite (×1.0)</td>
+                    <td><span class="score score-medium">0.9</span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="info-box-success">
+            <h3>🏆 Mejores Candidatos (Puntuación ≥ 1.0)</h3>
+            <ol>
+ 
+                <li><strong>Titán (subsuperficie)</strong> - 1.5 (océano subterráneo)</li>
+                <li><strong>Titán (superficie)</strong> - 1.4 (atmósfera densa)</li>
+                <li><strong>Encélado (océano)</strong> - 1.3 (actividad hidrotermal)</li>
+                <li><strong>Ceres</strong> - 1.1 (criovulcanismo activo)</li>
+                <li><strong>Europa (océano)</strong> - 1.0 (agua líquida confirmada)</li>
+                 
+                <li><strong>Marte</strong>    no aplica - 1.5 (superficie accesible)</li>
+                 <li><strong>Tierra</strong> no aplica - 2.0 (referencia)</li>
+            </ol>
+        </div>
+
+        <div class="info-box-info">
+            <h4>💡 Notas sobre la búsqueda</h4>
+            <ul>
+                <li>Los océanos subterráneos ofrecen <strong>protección</strong> contra radiación y temperaturas estables</li>
+                <li><strong>Marte y Titán</strong> tienen las mejores combinaciones de accesibilidad y habitabilidad</li>
+                <li>Las lunas con <strong>actividad volcánica/geológica</strong> tienen fuentes de energía internas</li>
+                <li>Los asteroides grandes tienen probabilidades muy bajas (0.1) según tus criterios</li>
+            </ul>
+        </div>
+
+        <div style="margin-top: 20px; text-align: center;">
+            <button id="showBibleBtn">
+                📖 Ver Texto Bíblico - Ezequiel 1
+            </button>
+        </div>
+
+        <div id="bibleModal">
+            <div>
+                <button id="closeModal">×</button>
+
+                <h2>Ezequiel 1 - La Visión de la Gloria Divina</h2>
+
+                <div>
+                    <p><strong>1</strong> Aconteció en el año treinta, en el mes cuarto, a los cinco días del mes, que estando yo en medio de los cautivos junto al río Quebar, los cielos se abrieron, y vi visiones de Dios.</p>
+
+                    <p><strong>4</strong> Y miré, y he aquí venía del norte un viento tempestuoso, y una gran nube, con un fuego envolvente, y alrededor de él un resplandor, y en medio del fuego algo que parecía como bronce refulgente,</p>
+
+                    <p><strong>5</strong> y en medio de ella la figura de cuatro seres vivientes. Y esta era su apariencia: había en ellos semejanza de hombre.</p>
+
+                    <p><strong>6</strong> Cada uno tenía cuatro caras y cuatro alas.</p>
+
+                    <p><strong>15-16</strong> Mientras yo miraba los seres vivientes, he aquí una rueda sobre la tierra junto a los seres vivientes, a los cuatro lados. El aspecto de las ruedas y su obra era semejante al color del crisólito. Y las cuatro tenían una misma semejanza; su apariencia y su obra eran como rueda en medio de rueda.</p>
+
+                    <p><strong>18</strong> Y sus aros eran altos y espantosos, y llenos de ojos alrededor en las cuatro.</p>
+
+                    <p><strong>19-20</strong> Y cuando los seres vivientes andaban, las ruedas andaban junto a ellos; y cuando los seres vivientes se levantaban de la tierra, las ruedas se levantaban. Hacia donde el espíritu les movía que anduviesen, andaban; hacia donde les movía el espíritu que anduviesen, las ruedas también se levantaban tras ellos; porque el espíritu de los seres vivientes estaba en las ruedas.</p>
+
+                    <p><strong>24</strong> Y oí el sonido de sus alas cuando andaban, como sonido de muchas aguas, como la voz del Omnipotente, como ruido de muchedumbre, como el ruido de un ejército.</p>
+
+                    <p><strong>26-28</strong> Y sobre la expansión que había sobre sus cabezas se veía la figura de un trono que parecía de piedra de zafiro; y sobre la figura del trono había una semejanza que parecía de hombre sentado sobre él. Como parece el arco iris que está en las nubes el día que llueve, así era el parecer del resplandor alrededor. Esta fue la visión de la semejanza de la gloria de Jehová.</p>
+                </div>
+
+                <p style="text-align: center; color: #757575; font-size: 0.9em; margin-top: 20px;">Reina-Valera 1960 (RVR1960)</p>
+            </div>
+        </div>
+
+        <script>
+            const modal = document.getElementById('bibleModal');
+            const showBtn = document.getElementById('showBibleBtn');
+            const closeBtn = document.getElementById('closeModal');
+
+            showBtn.addEventListener('click', () => {
+                modal.style.display = 'block';
+            });
+
+            closeBtn.addEventListener('click', () => {
+                modal.style.display = 'none';
+            });
+
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+
+            closeBtn.addEventListener('mouseenter', () => {
+                closeBtn.style.background = '#bdbdbd';
+            });
+
+            closeBtn.addEventListener('mouseleave', () => {
+                closeBtn.style.background = '#e0e0e0';
+            });
+        </script>
+    </div>
+</body>
+</html>
